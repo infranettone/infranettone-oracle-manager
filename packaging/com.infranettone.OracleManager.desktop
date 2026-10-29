@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Oracle Manager
+Comment=Bases de datos Oracle y sus usuarios/esquemas, por SSH
+Exec=infranettone-oracle
+Icon=network-server
+Categories=Development;Database;
+Keywords=oracle;sqlplus;esquemas;usuarios;
+StartupNotify=true

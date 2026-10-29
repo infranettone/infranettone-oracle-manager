@@ -1,0 +1,4 @@
+.venv/
+__pycache__/
+dist/
+oracle_manager/_version.py
