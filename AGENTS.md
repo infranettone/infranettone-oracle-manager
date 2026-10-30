@@ -18,7 +18,7 @@ usuarios/esquemas. Uso: [README.md](README.md).
 - **Todo en español** (salida, comentarios, commits, docs), con tildes correctas. Identificadores en inglés.
 - Comentarios breves que explican el *porqué*. Sin linter: `python3 -m compileall -q oracle_manager`.
 - Lo lento (ssh + sqlplus) va en un hilo y vuelve a la UI con `GLib.idle_add`.
-- Commits: título en español, sin líneas de atribución (nada de `Co-Authored-By`). Releases: tag `v*` (SemVer).
+- Commits: título en español, sin líneas de atribución (nada de `Co-Authored-By`). Releases: tag `v*` (SemVer); la CI construye el `.deb` (`packaging/build-deb.sh`) y lo adjunta a la release.
 
 ## Trampas conocidas
 

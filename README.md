@@ -6,6 +6,12 @@ ocupado. No hay que saber los SID ni ninguna contraseña de Oracle.
 
 Documentación para desarrollar: [AGENTS.md](AGENTS.md).
 
+## Instalar
+
+Descarga el `.deb` de la [última release](https://github.com/infranettone/infranettone-oracle-manager/releases/latest)
+e instálalo con `sudo apt install ./infranettone-oracle_*_all.deb`. Se abre desde el menú de aplicaciones o con
+`infranettone-oracle`.
+
 ## Uso
 
 `python3 -m oracle_manager` abre la interfaz. Con **+** se añaden máquinas (nombre, host, usuario SSH, puerto y
