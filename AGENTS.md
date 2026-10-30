@@ -12,13 +12,24 @@ usuarios/esquemas. Uso: [README.md](README.md).
 | `oracle_manager/ui.py` | Máquinas (alta/edición/borrado) con sus instancias debajo a la izquierda; tabla de usuarios (`Gtk.ColumnView`, ordenable, buscador) a la derecha |
 | `oracle_manager/__main__.py` | Sin host abre la interfaz; con host, tabla en terminal o `--json` |
 | `oracle_manager/version.py` | Versión desde `_version.py` (paquete) o `git describe` |
+| `oracle_manager/remote/*.sh` | **Común**: los scripts que se ejecutan en la máquina remota (Python los lee; el `.exe` los lleva incrustados) |
+| `tests/fixtures/` | **Común**: salida de ejemplo y resultado esperado; lo comprueban `tests/test_core.py` y `windows/Tests.cs` |
+| `windows/Core.cs` | Lo mismo que `discover.py`, `usage.py`, `machines.py` y `dump.py`, en C#: un cambio en uno va también en el otro |
+| `windows/MainForm.cs`, `Dialogs.cs`, `Program.cs` | Interfaz WinForms (controles Win32) y arranque |
+| `windows/Installer.cs` | El `.exe` se instala a sí mismo por usuario: `%LOCALAPPDATA%\Programs`, menú Inicio y clave Uninstall de HKCU (`--install`, `--uninstall`, `--purge`, `--silent`) |
+
+## Por qué dos núcleos
+
+Windows no trae Python: compartirlo obligaría a empaquetar un intérprete y el `.exe` pasaría de 80 KB a decenas de MB.
+Lo que se comparte son los scripts remotos y el fixture. La lógica local (analizar, clasificar, armar el ssh) está en
+los dos lenguajes y el fixture avisa si divergen.
 
 ## Reglas del proyecto
 
 - **Todo en español** (salida, comentarios, commits, docs), con tildes correctas. Identificadores en inglés.
 - Comentarios breves que explican el *porqué*. Sin linter: `python3 -m compileall -q oracle_manager`.
 - Lo lento (ssh + sqlplus) va en un hilo y vuelve a la UI con `GLib.idle_add`.
-- Commits: título en español, sin líneas de atribución (nada de `Co-Authored-By`). Releases: tag `v*` (SemVer); la CI construye el `.deb` (`packaging/build-deb.sh`) y lo adjunta a la release.
+- Commits: título en español, sin líneas de atribución (nada de `Co-Authored-By`). Releases: tag `v*` (SemVer); la CI construye el `.deb` (`packaging/build-deb.sh`) y el `.exe` (`windows/build.ps1`) y los adjunta a la release.
 
 ## Trampas conocidas
 
@@ -49,6 +60,10 @@ usuarios/esquemas. Uso: [README.md](README.md).
   una PDB, `ORACLE_PDB_SID` (disparador `DBMS_SET_PDB`, 18c+). Nada de `compression=` (licencia Advanced
   Compression). Si la carpeta de `DATA_PUMP_DIR` no existe (ORA-39070/ORA-29283), se crea con el dueño del PMON. El .dmp se lee por `/proc/<pid>/root/<DATA_PUMP_DIR>` y se borra siempre al acabar. En XE, expdp
   da ORA-31642 en `DBMS_CUBE_EXP` (no trae OLAP): es un aviso, el volcado vale.
+- **Windows**: solo C# 5 (lo que compila el `csc.exe` de `%windir%\Microsoft.NET\Framework64\v4.0.30319`, sin SDK ni
+  NuGet), sobre .NET Framework 4.8, que ya viene en Windows. `.NET` no deja elegir la codificación de stdin: el script
+  se escribe en bytes UTF-8 sin BOM y sin CR (`.gitattributes` fuerza LF en los `.sh`). `SSH_ASKPASS` apunta al propio
+  `.exe`, que escribe la contraseña si ve `ORACLE_MANAGER_SSH_PASSWORD`. Sin modo terminal, por ahora.
 - OpenSSH avisa por stderr del intercambio de claves no post-cuántico (líneas con `**`): no es un error.
 
 ## Probar
@@ -56,4 +71,7 @@ usuarios/esquemas. Uso: [README.md](README.md).
 ```bash
 python3 -m oracle_manager             # interfaz
 python3 -m oracle_manager HOST        # terminal
+python3 -m unittest discover -s tests # pruebas del núcleo
 ```
+
+En Windows, `windows\build.ps1` compila, pasa las pruebas y deja el `.exe` en `dist\`.

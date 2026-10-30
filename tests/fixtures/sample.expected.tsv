@@ -1,0 +1,8 @@
+1	SYS	Y	Bajo	ahora	-1
+3	SYS	Y	Sin uso	nunca	10000000
+3	APP	N	Alto	ahora	-1
+3	FAKE	N	Bajo	desde el arranque	1000000
+3	WEB	N	Medio	hace 1 d	1
+3	RECENT	N	Bajo	hace 30 d	30
+3	OLD	N	Sin uso	hace 2 años	730
+3	IDLE	N	Sin uso	nunca	10000000

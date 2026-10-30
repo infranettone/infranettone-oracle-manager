@@ -128,7 +128,7 @@ class Window(Adw.ApplicationWindow):
         header.pack_start(add)
         about = Gtk.Button(icon_name="help-about-symbolic", tooltip_text="Acerca de")
         about.connect("clicked", lambda *_: Adw.AboutDialog(
-            application_name="Oracle Manager", application_icon="network-server", version=app_version(),
+            application_name="Oracle Manager", application_icon=APP_ID, version=app_version(),
             developer_name="Raul Adamuz", comments="Bases de datos Oracle y sus usuarios/esquemas, por SSH",
             website="https://github.com/infranettone/infranettone-oracle-manager").present(self))
         header.pack_end(about)
