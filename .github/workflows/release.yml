@@ -17,6 +17,9 @@ jobs:
       - name: Comprobar sintaxis
         run: python3 -m compileall -q oracle_manager
 
+      - name: Pruebas
+        run: python3 -m unittest discover -s tests
+
       - name: Construir .deb
         run: |
           VERSION="${GITHUB_REF_NAME}"
@@ -30,13 +33,42 @@ jobs:
           name: deb
           path: dist/*.deb
 
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Con el csc.exe que trae Windows: compila también las pruebas y las pasa.
+      - name: Construir .exe
+        shell: pwsh
+        run: |
+          $version = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME } else { "0.0.0-$($env:GITHUB_SHA.Substring(0, 7))" }
+          windows/build.ps1 $version
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: dist/*.exe
+
+  # Un solo trabajo publica: dos a la vez chocarían al crear la release.
+  release:
+    if: github.ref_type == 'tag'
+    needs: [deb, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
       - name: Publicar release
-        if: github.ref_type == 'tag'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
-            gh release upload "$GITHUB_REF_NAME" dist/*.deb --clobber
+            gh release upload "$GITHUB_REF_NAME" dist/* --clobber
           else
-            gh release create "$GITHUB_REF_NAME" dist/*.deb --title "$GITHUB_REF_NAME" --generate-notes
+            gh release create "$GITHUB_REF_NAME" dist/* --title "$GITHUB_REF_NAME" --generate-notes
           fi

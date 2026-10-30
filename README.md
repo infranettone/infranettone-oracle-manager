@@ -12,6 +12,14 @@ Descarga el `.deb` de la [última release](https://github.com/infranettone/infra
 e instálalo con `sudo apt install ./infranettone-oracle_*_all.deb`. Se abre desde el menú de aplicaciones o con
 `infranettone-oracle`.
 
+En Windows 10/11, descarga el `.exe` de la misma release y ábrelo: se ofrece a instalarse (sin administrador) y queda
+en el menú Inicio y en el buscador de Windows. Para actualizar, abre el `.exe` de una versión nueva. Se desinstala
+abriendo de nuevo ese `.exe` o desde **Configuración > Aplicaciones instaladas**, y deja elegir entre conservar las
+máquinas guardadas (por defecto) o borrarlas. Solo necesita el Cliente OpenSSH
+y .NET Framework 4.8, que ya vienen con el sistema. Las máquinas se guardan en
+`%APPDATA%\infranettone-oracle\config.json`. No tiene modo terminal. No está firmado, así que SmartScreen puede avisar
+la primera vez.
+
 ## Uso
 
 `python3 -m oracle_manager` abre la interfaz. Con **+** se añaden máquinas (nombre, host, usuario SSH, puerto y

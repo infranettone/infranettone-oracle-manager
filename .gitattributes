@@ -1,0 +1,3 @@
+# Se ejecutan en la máquina remota con bash: un CRLF de un checkout en Windows los rompería.
+*.sh text eol=lf
+tests/fixtures/* text eol=lf

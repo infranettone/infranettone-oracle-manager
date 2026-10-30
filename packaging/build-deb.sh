@@ -13,6 +13,8 @@ trap 'rm -rf "$ROOT"' EXIT
 LIB="$ROOT/usr/lib/python3/dist-packages/oracle_manager"
 install -d "$LIB"
 install -m 644 oracle_manager/*.py "$LIB/"
+install -d "$LIB/remote"
+install -m 644 oracle_manager/remote/*.sh "$LIB/remote/"
 echo "VERSION = \"$VERSION\"" > "$LIB/_version.py"  # la que enseña la app (version.py)
 
 install -D -m 755 /dev/stdin "$ROOT/usr/bin/$PKG" <<'EOF'
@@ -22,6 +24,8 @@ EOF
 
 install -D -m 644 packaging/com.infranettone.OracleManager.desktop \
   "$ROOT/usr/share/applications/com.infranettone.OracleManager.desktop"
+install -D -m 644 packaging/com.infranettone.OracleManager.svg \
+  "$ROOT/usr/share/icons/hicolor/scalable/apps/com.infranettone.OracleManager.svg"
 install -D -m 644 README.md "$ROOT/usr/share/doc/$PKG/README.md"
 
 install -d "$ROOT/DEBIAN"
